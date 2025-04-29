@@ -44,7 +44,8 @@ message CreateUserResponse {
 }
 
 message UpdateUserRequest {
-    string name = 1;
+    string user_id = 1;  
+    string name = 2;
 }
 
 message UpdateUserResponse {
@@ -53,10 +54,11 @@ message UpdateUserResponse {
 }
 
 message DeleteUserRequest {
-    string user_id = 1;
+    string user_id = 1;  
 }
 
 message DeleteUserResponse {
     bool status = 1;
     string message = 2;
 }
+

@@ -133,7 +133,7 @@ func (h *UserHandler) UpdateUser(ctx context.Context, req *pbuser.UpdateUserRequ
 	}
 
 	var user UserModel
-	if err := config.DB.First(&user).Error; err != nil {
+	if err := config.DB.Where("id = ?", req.UserId).First(&user).Error; err != nil {
 		return &pbuser.UpdateUserResponse{Status: false, Message: "Not Found"}, err
 	}
 	user.Name = req.Name
