@@ -87,6 +87,10 @@ func (h *UserHandler) CreateUser(ctx context.Context, req *pbuser.CreateUserRequ
 		return &pbuser.CreateUserResponse{Status: false, Message: "Unauthorized"}, nil
 	}
 
+	if req.Name == "" || req.Email == "" || req.Password == "" {
+		return &pbuser.CreateUserResponse{Status: false, Message: "Name, Email, and Password are required"}, nil
+	}
+
 	user := UserModel{
 		Email:    req.Email,
 		Name:     req.Name,
@@ -132,6 +136,10 @@ func (h *UserHandler) UpdateUser(ctx context.Context, req *pbuser.UpdateUserRequ
 		return &pbuser.UpdateUserResponse{Status: false, Message: "Unauthorized"}, nil
 	}
 
+	if req.UserId == "" || req.Name == "" {
+		return &pbuser.UpdateUserResponse{Status: false, Message: "User ID and Name are required"}, nil
+	}
+
 	var user UserModel
 	if err := config.DB.Where("id = ?", req.UserId).First(&user).Error; err != nil {
 		return &pbuser.UpdateUserResponse{Status: false, Message: "Not Found"}, err
@@ -152,6 +160,10 @@ func (h *UserHandler) DeleteUser(ctx context.Context, req *pbuser.DeleteUserRequ
 	canDelete, err := checkPermission(roleId, UserServiceRoute, "r_delete")
 	if err != nil || !canDelete {
 		return &pbuser.DeleteUserResponse{Status: false, Message: "Unauthorized"}, nil
+	}
+
+	if req.UserId == "" {
+		return &pbuser.DeleteUserResponse{Status: false, Message: "User ID is required"}, nil
 	}
 
 	var user UserModel
